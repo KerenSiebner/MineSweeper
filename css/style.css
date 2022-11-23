@@ -1,0 +1,48 @@
+
+body {
+    background-color: rgba(128, 150, 203, 0.565);
+    color: black;
+}
+
+h1 {
+text-align:center;
+font-size: 80px;
+}
+
+.cell {
+    width: 40px;
+    height: 40px;
+    padding:20px;
+    text-align: center;
+    border: 1px solid black;
+    background-color: rgb(246, 240, 240);
+}
+
+table {
+    position: absolute;
+    left: 40%;
+    margin-top:100px ;
+    border-collapse: collapse;
+}
+
+td th {
+    padding: 10px;
+}
+
+.mine {
+    background-image: url(img/mine.png);
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+h3 {
+    /* position: absolute; */
+    color: black;
+    font-size: 50px;
+}
+
+.difficulty {
+    font-size: 30px;
+    padding: 10px;
+}
