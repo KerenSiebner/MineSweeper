@@ -1,7 +1,6 @@
 'use strict'
 
 
-
 // Builds the board Set mines at random locations Call setMinesNegsCount() Return the created board
 function buildBoard(size, minesCount) {
     const board = []
@@ -16,8 +15,6 @@ function buildBoard(size, minesCount) {
             }
         }
     }
-    // board[0][1].isMine = true
-    // board[2][3].isMine = true
     return board
 }
 
@@ -27,7 +24,6 @@ function renderBoard(board, selector) {
     
     var strHTML = '<table border="0"><tbody>'
     for (var i = 0; i < board.length; i++) {
-        
         strHTML += '<tr>'
         for (var j = 0; j < board[0].length; j++) {
 
@@ -35,9 +31,12 @@ function renderBoard(board, selector) {
             var className = `cell cell-${i}-${j}`
             
             if (cell.isMine && cell.isShown) className += ' mine'
-            strHTML += `<td class="${className}" onclick ="cellClicked(this, ${i},${j})">`
+            if (cell.isShown) className += ' shown'
+            if (cell.isMarked) className += ' flag'
+
+            strHTML += `<td class="${className}" onclick ="cellClicked(this, ${i},${j})" oncontextmenu ="cellMarked(this, ${i},${j})">`
             
-            if (!cell.isMine && cell.isShown) strHTML += `${cell.minesAroundCount}`
+            if (!cell.isMine && cell.isShown && (cell.minesAroundCount!==0)) strHTML += `${cell.minesAroundCount}`
         }
         strHTML += '</td></tr>'
     }
@@ -48,6 +47,10 @@ function renderBoard(board, selector) {
     
 }
 
+function renderShownCell(row, column) {
+    const elCell = document.querySelector(`.cell-${row}-${column}`)
+    elCell.style.backgroundColor = 'blue'
+}
 
 function countMineNeighbors(cellI, cellJ, board) {
     var neighborsCount = 0
@@ -64,29 +67,42 @@ function countMineNeighbors(cellI, cellJ, board) {
     return neighborsCount
 }
 
+//Count mines around each cell and set the cell's minesAroundCount.
+function setMinesNegsCount(board) {
+    const size = gLevel.SIZE
+    var currMineCount = 0
+    for (var i = 0; i < size; i++) {
+        for (var j = 0; j < size; j++) {
+            currMineCount = countMineNeighbors(i, j, gBoard)
+            board[i][j].minesAroundCount = currMineCount
+        }
+        currMineCount = 0
+    }
+}
+
 function revealNeighbors(cellI, cellJ, board){
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= board.length) continue
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            const currCell = board[i][j]
             if (i === cellI && j === cellJ) continue
             if (j < 0 || j >= board[i].length) continue
 
-            if (board[i][j].isMine || board[i][j].isMarked || board[i][j].isShown) continue
-            else board[i][j].isShown = true
+            if (currCell.isMine || currCell.isMarked || currCell.isShown) continue
+            else currCell.isShown = true
         }
     }
 }
 
-
 function setMineOnBoard() {
     const mineCount = gLevel.MINE
-    console.log('gBoard', gBoard)
     for (var i = 0; i < mineCount; i++) {
         var mineIdx = randonMineIdx()
-        console.log('mineIdx', mineIdx)
-        while(gBoard[mineIdx.i][mineIdx.j].isMine){
+        var currCell = gBoard[mineIdx.i][mineIdx.j]
+        console.log('gBoard', gBoard)
+        while(currCell.isMine || currCell.isShown){
             mineIdx = randonMineIdx()
-            console.log('mineIdx', mineIdx)
+            currCell = gBoard[mineIdx.i][mineIdx.j]
         }
         gBoard[mineIdx.i][mineIdx.j].isMine=true
     }
@@ -104,7 +120,6 @@ function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-
 function onMouseButton(event) {
     console.log('MouseEvent.button', MouseEvent.button)
 
@@ -118,17 +133,92 @@ function onMouseButton(event) {
     }
 }
 
-
 function startTimer() {
     gStartTime = Date.now() 
     gInterval = setInterval(() => {
         const seconds = (Date.now() - gStartTime) / 1000
         var elH2 = document.querySelector('.time')
-        elH2.innerText = seconds.toFixed(3)
+        elH2.innerText = seconds.toFixed(0)
+        gGame.secsPassed=seconds.toFixed(0)
     }, 1);
 }
 
 function resetTime() {
     var elH2 = document.querySelector('.time')
-    elH2.innerText = '0.000'
+    elH2.innerText = '0'
 }
+
+function restartGame() {
+    gBoard = []
+    gStartTime = null
+    gGame.shownCount = 0
+    gLives = 3
+    gGame.secsPassed=0
+    gameOverCloseMsg()
+    clearInterval(gInterval)
+    resetTime()
+    resetSmiley()
+    initGame()
+}
+
+function restartButtonChange(isWin) {
+    const elRestartButton = document.querySelector('.re-start')
+    if (isWin) elRestartButton.style.backgroundImage = 'url(img/king.png)'
+    else elRestartButton.style.backgroundImage = 'url(img/dead.png)'
+}
+
+function resetSmiley() {
+    const elRestartButton = document.querySelector('.re-start')
+    elRestartButton.style.backgroundImage = 'url(img/smiley.png)'
+}
+
+function renderGameInfo() {
+    var level = ''
+    switch (gLevel.SIZE) {
+        case 4: level = 'BEGINNER'
+            break
+        case 8: level = 'MEDIUM'
+            break
+        case 12: level = 'EXPERT'
+            break
+    }
+    var hearts = ''
+    switch (gLives) {
+        case 3: hearts = LIVE + LIVE + LIVE
+            break
+        case 2: hearts = LIVE + LIVE
+            break
+        case 1: hearts = LIVE
+            break
+    }
+
+    var strHTML = '<table class=".data" border="1"><tbody>'
+    strHTML += `<tr><th>SECONDS PASSED</th><th>SHOWN COUNT</th> <th>LEVEL</th><th>LIVES</th></tr>`
+    strHTML += `<tr><td>${gGame.secsPassed}</td><td>${gGame.shownCount}</td><td>${level}</td><td>${hearts}</td></tr>`
+    strHTML += '</tbody></table>'
+
+    const elContainer = document.querySelector(".table-data")
+    elContainer.innerHTML = strHTML
+}
+
+function isBoardMarked() {
+    const size = gBoard.length
+    for (var i = 0; i < size; i++) {
+        for (var j = 0; j < size; j++) {
+            if (gBoard[i][j].isMarked) return true
+        }
+    }
+    return false
+}
+
+function revealMines(){
+    const size = gBoard.length
+    for (var i = 0; i < size; i++) {
+        for (var j = 0; j < size; j++) {
+            const currCell =gBoard[i][j]
+            if (currCell.isMine) currCell.isShown = true
+        }
+    }
+    return false
+}
+

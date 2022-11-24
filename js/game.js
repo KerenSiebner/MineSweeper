@@ -6,12 +6,12 @@ window.oncontextmenu = (e) => {
 }
 
 const MINE = '\u{1F525}'
+const LIVE = '\u{1F499}'
 // gBoard – A Matrix containing cell objects: Each cell: 
 var gBoard = []
 var gInterval
-var gTime
 var gStartTime
-var gClickCount = 0
+var gLives = 3
 
 
 //This is an object by which the board size is set (in this case: 4x4 board and how many mines to put)
@@ -20,12 +20,6 @@ var gLevel = {
     MINE: 2
 }
 
-// This is an object in which you can keep and update the current game state:
-// isOn: Boolean, when true we let the user play
-// shownCount: How many cells are shown 
-// markedCount: How many cells are marked (with a flag)
-// secsPassed: How many seconds passed
-
 var gGame = {
     isON: false,
     shownCount: 0,
@@ -33,108 +27,138 @@ var gGame = {
 }
 
 function initGame() {
-    gameOverMsgToggle()
-    if (gInterval) clearInterval(gInterval)
-    gGame.isON = true
-    resetTime()
-    gBoard = buildBoard(gLevel.SIZE, gLevel.MINE)
-    setMineOnBoard()
-    setMinesNegsCount(gBoard)
-    renderBoard(gBoard, '.board-container')
-    // initRightClick()
-}
-
-//send with elCell
-// function initRightClick(){
-//     const elCell = document.querySelector('.cell cell-0-0')
-//     elCell.addEventListener('contextmenu',cellMarked())
-// }
-
-//Count mines around each cell and set the cell's minesAroundCount.
-function setMinesNegsCount(board) {
-    const size = gLevel.SIZE
-    var currMineCount = 0
-    for (var i = 0; i < size; i++) {
-        for (var j = 0; j < size; j++) {
-            currMineCount = countMineNeighbors(i, j, gBoard)
-            board[i][j].minesAroundCount = currMineCount
-        }
-        currMineCount = 0
+    if (gInterval) {
+        clearInterval(gInterval)
+        gInterval = null
     }
+    resetTime()
+    gGame.isON = true
+    renderGameInfo()
+    gBoard = buildBoard(gLevel.SIZE, gLevel.MINE)
+    renderBoard(gBoard, '.board-container')
 }
+
 
 function cellClicked(elCell, i, j) {
-    console.log('gGame', gGame)
-    if (!gClickCount) {
-        startTimer()
-        gGame.isON = true
-    }
-    gClickCount++
-
-    if (!gGame.isON) return
-
-    //condition where game is over
-
     var strHTML
+    const isMarked = isBoardMarked()
     const cell = gBoard[i][j]
+    
+    //in case game is over, or already shown or marked - don't allow more clicking
+    if (!gGame.isON || cell.isShown || cell.isMarked) return
+    
+    //first click
+    if (!gGame.shownCount & !isMarked) {
+        cell.isShown = true
+        onFirstClick(i,j)
+    }
+    
+    gGame.shownCount++
+    // renderShownCell(i, j)
+    
+    //stepped on mine:
     if (cell.isMine) {
         elCell.classList.add('mine')
         cell.isShown = true
-        gameOverMsgToggle(false)
-        clearInterval(gInterval)
-        gGame.isON = false
+        gLives--
+        if (!checkGameOver()) livesDecreaseMsg()
+        //condition where game is over
+        if (!gLives) {
+            restartButtonChange(false)
+            gameOverMsg(false)
+            revealMines()
+            clearInterval(gInterval)
+            gGame.isON = false
+        }
     }
+    //stepped on cell without a mine
     else {
         if (cell.minesAroundCount) {
             strHTML += `${cell.minesAroundCount}`
             elCell.innerHTML = strHTML
             cell.isShown = true
         } else {
+            cell.isShown = true
             expandShown(gBoard, i, j)
         }
     }
-    if (checkGameOver()) clearInterval(gInterval)
+    
+    //check if game over
+    if (checkGameOver()) {
+        clearInterval(gInterval)
+    }
+    
     renderBoard(gBoard, '.board-container')
-
+    renderGameInfo()
 }
-
 
 //Called on right click to mark a cell (suspected to be a mine)
 // Search the web (and implement) how to hide the context menu on right click
-//add par elCell
 
+function cellMarked(elCell, i, j) {
+    const cell = gBoard[i][j]
 
+    if (!gGame.isON || cell.isShown) return
 
-function cellMarked() {
-    console.log('Im marked!')
+    //if this is the first move of the game start timer
+    if(!isBoardMarked() && !gGame.shownCount){
+        cell.isMarked = true
+        elCell.classList.add('flag')
+        onFirstClick(i,j)
+    } 
+    else if (cell.isMarked) {
+        cell.isMarked = false
+        elCell.classList.remove('flag')
+    } else {
+        cell.isMarked = true
+        elCell.classList.add('flag')
+        if (checkGameOver()) {
+            clearInterval(gInterval)
+            gameOverMsg(true)
+        }
+    }
+    // renderBoard(gBoard, '.board-container')
+}
 
+function onFirstClick(row,col){
+    startTimer()
+    gGame.isON = true
+    setMineOnBoard({ row: row, col: col })
+    setMinesNegsCount(gBoard)
+    renderBoard(gBoard, '.board-container')
 }
 
 //Game ends when all mines are marked, and all the other cells are shown
 function checkGameOver() {
-    for (var i = 0; i < gLevel.SIZE; i++) {
-        for (var j = 0; j < gLevel.SIZE; j++) {
-            if (!gBoard[i][j].isShown) return false
+    if (gGame.shownCount === (gLevel.SIZE ** 2) - gLevel.MINE + (3 - gLives)) {
+        for (var i = 0; i < gLevel.SIZE; i++) {
+            for (var j = 0; j < gLevel.SIZE; j++) {
+                var currCell = gBoard[i][j]
+                console.log('currCell', currCell)
+                if (currCell.isMine && !currCell.isMarked && !currCell.isShown && gLives) return false
+            }
         }
+        gameOverMsg(true)
+        restartButtonChange(true)
+        return true
     }
-    gameOverMsgToggle(true)
-    return true
+    else return false
 }
 
-function gameOverMsgToggle(isWin) {
+
+function gameOverMsg(isWin) {
     const endGameMsg = document.querySelector('h3')
-    if (endGameMsg.hidden) {
-        if (isWin) endGameMsg.innerText = 'You Won!'
-        else endGameMsg.innerText = 'You Lost!'
-        endGameMsg.hidden = false
-    }
-    else endGameMsg.hidden = true
+    if (isWin) endGameMsg.innerText = 'You Won!'
+    else endGameMsg.innerText = 'You Lost!'
+    endGameMsg.hidden = false
+}
+
+function gameOverCloseMsg() {
+    const endGameMsg = document.querySelector('h3')
+    endGameMsg.hidden = true
 }
 
 //When user clicks a cell with no mines around, we need to open not only that cell, but also its neighbors.
-// NOTE: start with a basic implementation that only opens the non-mine 1st degree neighbors
-// BONUS: if you have the time later, try to work more like the real algorithm (see description
-// at the Bonuses section below)
 
 function expandShown(board, cellI, cellJ) {
     for (var i = cellI - 1; i <= cellI + 1; i++) {
@@ -144,7 +168,11 @@ function expandShown(board, cellI, cellJ) {
             if (j < 0 || j >= board[i].length) continue
 
             if (board[i][j].isMine || board[i][j].isMarked || board[i][j].isShown) continue
-            else board[i][j].isShown = true
+            else {
+                board[i][j].isShown = true
+                gGame.shownCount++
+                // renderShownCell(i, j)
+            }
         }
     }
 
@@ -163,5 +191,16 @@ function changeLevel(level) {
         gLevel.SIZE = 12
         gLevel.MINE = 32
     }
-    initGame()
+    resetSmiley()
+    gameOverCloseMsg()
+    restartGame()
+}
+
+function livesDecreaseMsg() {
+    const livesMsg = document.querySelector('.lives-msg')
+    var plural= ' lives'
+    if (gLives===1) plural =' life'
+    livesMsg.innerText = `You have ${gLives} ${plural} left! `
+    livesMsg.hidden=false
+    setTimeout(()=>{livesMsg.hidden = true},1000)
 }
