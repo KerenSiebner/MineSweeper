@@ -43,6 +43,7 @@ function renderBoard(board, selector) {
     strHTML += '</tbody></table>'
     
     const elContainer = document.querySelector(selector)
+    console.log('elContainer', elContainer)
     elContainer.innerHTML = strHTML
     
 }
@@ -193,8 +194,8 @@ function renderGameInfo() {
     }
 
     var strHTML = '<table class=".data" border="1"><tbody>'
-    strHTML += `<tr><th>SECONDS PASSED</th><th>SHOWN COUNT</th> <th>LEVEL</th><th>LIVES</th></tr>`
-    strHTML += `<tr><td>${gGame.secsPassed}</td><td>${gGame.shownCount}</td><td>${level}</td><td>${hearts}</td></tr>`
+    strHTML += `<tr><th>&nbspCOUNT&nbsp</th> <th>&nbspLEVEL&nbsp</th><th>&nbspLIVES&nbsp</th></tr>`
+    strHTML += `<tr><td>${gGame.shownCount}</td><td>${level}</td><td>${hearts}</td></tr>`
     strHTML += '</tbody></table>'
 
     const elContainer = document.querySelector(".table-data")

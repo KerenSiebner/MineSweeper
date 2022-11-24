@@ -12,6 +12,7 @@ var gBoard = []
 var gInterval
 var gStartTime
 var gLives = 3
+var gBestResult
 
 
 //This is an object by which the board size is set (in this case: 4x4 board and how many mines to put)
@@ -43,19 +44,19 @@ function cellClicked(elCell, i, j) {
     var strHTML
     const isMarked = isBoardMarked()
     const cell = gBoard[i][j]
-    
+
     //in case game is over, or already shown or marked - don't allow more clicking
     if (!gGame.isON || cell.isShown || cell.isMarked) return
-    
+
     //first click
     if (!gGame.shownCount & !isMarked) {
         cell.isShown = true
-        onFirstClick(i,j)
+        onFirstClick(i, j)
     }
-    
+
     gGame.shownCount++
     // renderShownCell(i, j)
-    
+
     //stepped on mine:
     if (cell.isMine) {
         elCell.classList.add('mine')
@@ -66,6 +67,7 @@ function cellClicked(elCell, i, j) {
         if (!gLives) {
             restartButtonChange(false)
             gameOverMsg(false)
+            storeBestTime()
             revealMines()
             clearInterval(gInterval)
             gGame.isON = false
@@ -82,12 +84,12 @@ function cellClicked(elCell, i, j) {
             expandShown(gBoard, i, j)
         }
     }
-    
+
     //check if game over
     if (checkGameOver()) {
         clearInterval(gInterval)
     }
-    
+
     renderBoard(gBoard, '.board-container')
     renderGameInfo()
 }
@@ -101,11 +103,11 @@ function cellMarked(elCell, i, j) {
     if (!gGame.isON || cell.isShown) return
 
     //if this is the first move of the game start timer
-    if(!isBoardMarked() && !gGame.shownCount){
+    if (!isBoardMarked() && !gGame.shownCount) {
         cell.isMarked = true
         elCell.classList.add('flag')
-        onFirstClick(i,j)
-    } 
+        onFirstClick(i, j)
+    }
     else if (cell.isMarked) {
         cell.isMarked = false
         elCell.classList.remove('flag')
@@ -120,7 +122,7 @@ function cellMarked(elCell, i, j) {
     // renderBoard(gBoard, '.board-container')
 }
 
-function onFirstClick(row,col){
+function onFirstClick(row, col) {
     startTimer()
     gGame.isON = true
     setMineOnBoard({ row: row, col: col })
@@ -139,6 +141,8 @@ function checkGameOver() {
             }
         }
         gameOverMsg(true)
+        storeBestTime()
+        renderBestTime()
         restartButtonChange(true)
         return true
     }
@@ -198,9 +202,25 @@ function changeLevel(level) {
 
 function livesDecreaseMsg() {
     const livesMsg = document.querySelector('.lives-msg')
-    var plural= ' lives'
-    if (gLives===1) plural =' life'
+    var plural = ' lives'
+    if (gLives === 1) plural = ' life'
     livesMsg.innerText = `You have ${gLives} ${plural} left! `
-    livesMsg.hidden=false
-    setTimeout(()=>{livesMsg.hidden = true},1000)
+    livesMsg.hidden = false
+    setTimeout(() => { livesMsg.hidden = true }, 1000)
+}
+
+//check if there is a best time in the local storage
+function storeBestTime() {
+    var prevBest = localStorage.getItem('bestResult');
+    const timeToSolve = gGame.secsPassed
+    
+    if (!prevBest || timeToSolve < prevBest) {
+        gBestResult = timeToSolve;
+        localStorage.setItem('BestResult', gBestResult);
+    }
+}
+function renderBestTime(){
+    const strHTML = `<h2>BEST TIME: ${gBestResult} seconds</h2>`
+    var elBestTime = document.getElementsByClassName('.best')
+    elBestTime.innerHTML = strHTML
 }
