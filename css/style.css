@@ -1,28 +1,6 @@
 /* html {
     padding: 50px 500px;
 } */
-
-.container {
-    width: 800;
-    margin: 0 auto;
-    padding-left: 3px;
-    padding-right: 3px;
-    position: relative;
-    margin-left: 30%;
-}
-
-.heading-section {
-    background: linear-gradient(#f3f6f7, #4045de98);
-    width: 800px;
-    float: bottom;
-    left: 0px;
-    padding-top: 10px;
-    padding-bottom: 0px;
-    overflow: hidden;
-    border-bottom: solid rgb(237, 233, 233);
-    text-align: center;
-}
-
 body {
     background-color: rgba(172, 188, 226, 0.091);
     color: black;
@@ -31,21 +9,45 @@ body {
     border: 20px;
 }
 
-p {
-    font-size: 15px;
+.container {
+    width: 800;
+    margin: 0 auto;
+    padding-left: 3px;
+    padding-right: 3px;
+    position: relative;
+    margin-left: 30%;
+    margin-right: 27%;
+    border: 2px solid rgba(0, 0, 0, 0.388);
+    border-radius: 10px;
 }
 
-h1 {
-    display: inline;
+.heading-section {
+    width: 793px;
+    float: bottom;
+    left: 0px;
+    padding-top: 10px;
+    padding-bottom: 0px;
+    overflow: hidden;
     text-align: center;
-    font-size: 40px;
+    background: linear-gradient(#f3f6f7, #4045de98);
+    border-bottom: solid rgb(237, 233, 233);
 }
 
-h2 {
-    width: 100px;
+.game-contaier {
+    width: 790px;
+    float: bottom;
+    padding-top: 10px;
+    padding-bottom: 0px;
+    overflow: hidden;
+}
+
+.board-container {
+    display: black;
+    position: relative;
     float: left;
-    display: block;
-    font-size: 20px;
+    left: 70px;
+    margin: auto;
+    width: 750px;
 }
 
 .cell {
@@ -76,12 +78,33 @@ h2 {
 
 }
 
-.board-container {
-    display: black;
-    position: relative;
+
+p {
+    font-size: 12px;
+}
+
+h1 {
+    display: inline;
+    text-align: center;
+    font-size: 40px;
+}
+
+h2 {
+    width: 100px;
     float: left;
-    margin: auto;
-    width: 800px;
+    display: block;
+    font-size: 20px;
+}
+
+
+h3 {
+    /* display: block; */
+    float: left;
+    left: 0;
+    color: black;
+    font-size: 20px;
+    margin-left: 20px;
+    margin-top: 8px;
 }
 
 .mine {
@@ -91,27 +114,18 @@ h2 {
     background-repeat: no-repeat;
 }
 
-h3 {
-    /* display: block; */
-    float: left;
-    left: 0;
-    color: black;
-    font-size: 20px;
-    margin: 20px;
-}
-
 .difficulty {
-    font-size: 20px;
-    font-family: Audiowide;
+    font-size: 14px;
+    font-family: inherit;
     padding: 2px 10px;
     margin: 5px;
+    float: left;
+    margin-top: 18px;
+    margin-left: 5px;
+    background-color: rgba(255, 255, 255, 0.254);
+    border-radius: 10px;
 }
 
-.diff-contaier {
-    float: bottom;
-    margin-top: 30px;
-    margin-left: 30px;
-}
 
 .flag {
     background-image: url(img/flag.png);
@@ -121,23 +135,17 @@ h3 {
 }
 
 .re-start {
-    background-image: url(img/smiley.png);
-    width: 50px;
-    height: 50px;
+    background-image: url(img/smily.jpeg);
+    width: 60px;
+    height: 60px;
     background-size: 60%;
     background-position: center;
     background-repeat: no-repeat;
     float: left;
-    margin-left: 20%;
+    margin-left: 45%;
     margin-bottom: 1px;
     border-radius: 50%;
-}
-
-.timer h2 {
-    width: 120px;
-    margin-left: 30px;
-    left: auto;
-    font-size: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.299);
 }
 
 .shown {
@@ -150,53 +158,18 @@ h3 {
     background-color: rgba(255, 255, 255, 0.44);
 }
 
-.footer {
-    /* vertical-align: middle; */
-    /* overflow: hidden; */
-    /* position: bottom fixed; */
-}
 
 .footer p {
     font-size: 16px;
     width: 800px;
-    height: 70px;
-    display: absolute;
     bottom: 0px;
-    margin-top: 30px;
     text-align: center;
     letter-spacing: 3px;
     text-transform: uppercase;
     padding: 10px;
+    position: fixed bottom;
 }
 
-/* .social-media {
-    width: 55%;
-    float: left;
-    padding-top: 0px;
-    text-align: left;
-    padding-left: 25px;
-} */
-
-.personal-info {
-    width: 40%;
-    float: left;
-    text-align: left;
-    padding: none
-}
-
-ol {
-    font-family: 'Thasadith';
-    list-style-type: none;
-    padding-inline: 10;
-    line-height: 25px;
-    margin-top: 10px;
-}
-
-a {
-    font-family: 'Thasadith';
-    color: black;
-    text-decoration: none;
-}
 
 
 .data td {
@@ -206,35 +179,40 @@ a {
 
 .game-info {
     background: #0d14e418;
-    width: 800px;
-    padding-top: 10px;
-    padding-bottom: 0px;
+    width: 740px;
+    padding-left: 50px;
     overflow: hidden;
-    border-bottom: solid rgb(237, 233, 233);
-    border-bottom-width: 8px;
+    border-bottom: solid rgba(14, 11, 11, 0.241);
+    border-bottom-width: 2px;
     text-align: center;
 }
 
 .table-data {
-    float: right;
-    width: 550px;
-    font-size: 16px;
-    padding: 20px;
+    float: left;
     text-align: center;
-    border: 0.5em;
+    margin-left: 50px;
+    padding-bottom: 10px;
+    ;
 }
 
 .table-data th td {
     padding: 10px;
     width: 500px;
-    font-size: 16px;
 }
 
 table {
     position: block;
     margin-left: 0;
     margin-top: 10px;
-    font-size: 20px;
+    font-size: 14px;
     border-spacing: 0;
     border-color: rgba(128, 128, 128, 0.307);
 }
+
+/* 
+.timer h2 {
+    width: 120px;
+    margin-left: 30px;
+    left: auto;
+    font-size: 20px;
+} */

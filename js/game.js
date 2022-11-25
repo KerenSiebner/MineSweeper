@@ -13,6 +13,7 @@ var gInterval
 var gStartTime
 var gLives = 3
 var gBestResult
+var gLonelyNeighbor
 
 
 //This is an object by which the board size is set (in this case: 4x4 board and how many mines to put)
@@ -32,9 +33,10 @@ function initGame() {
         clearInterval(gInterval)
         gInterval = null
     }
+    storeBestTime()
+    renderGameInfo()
     resetTime()
     gGame.isON = true
-    renderGameInfo()
     gBoard = buildBoard(gLevel.SIZE, gLevel.MINE)
     renderBoard(gBoard, '.board-container')
 }
@@ -46,7 +48,7 @@ function cellClicked(elCell, i, j) {
     const cell = gBoard[i][j]
 
     //in case game is over, or already shown or marked - don't allow more clicking
-    if (!gGame.isON || cell.isShown || cell.isMarked) return
+    if (!gGame.isON || cell.isMarked) return
 
     //first click
     if (!gGame.shownCount & !isMarked) {
@@ -69,6 +71,8 @@ function cellClicked(elCell, i, j) {
             gameOverMsg(false)
             storeBestTime()
             revealMines()
+            const currTime = gGame.secsPassed
+            gGame.secsPassed = currTime
             clearInterval(gInterval)
             gGame.isON = false
         }
@@ -87,6 +91,11 @@ function cellClicked(elCell, i, j) {
 
     //check if game over
     if (checkGameOver()) {
+        const currTime = +gGame.secsPassed
+        console.log('currTime', currTime)
+        gGame.secsPassed = currTime
+        console.log('gGame.secsPassed', gGame.secsPassed)
+        // renderGameInfo()
         clearInterval(gInterval)
     }
 
@@ -115,6 +124,8 @@ function cellMarked(elCell, i, j) {
         cell.isMarked = true
         elCell.classList.add('flag')
         if (checkGameOver()) {
+            const currTime = gGame.secsPassed
+            gGame.secsPassed = currTime
             clearInterval(gInterval)
             gameOverMsg(true)
         }
@@ -142,7 +153,6 @@ function checkGameOver() {
         }
         gameOverMsg(true)
         storeBestTime()
-        renderBestTime()
         restartButtonChange(true)
         return true
     }
@@ -165,21 +175,24 @@ function gameOverCloseMsg() {
 //When user clicks a cell with no mines around, we need to open not only that cell, but also its neighbors.
 
 function expandShown(board, cellI, cellJ) {
+    gLonelyNeighbor = []
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= board.length) continue
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            var currCell = board[i][j]
             if (i === cellI && j === cellJ) continue
             if (j < 0 || j >= board[i].length) continue
 
-            if (board[i][j].isMine || board[i][j].isMarked || board[i][j].isShown) continue
+            if (currCell.isMine || currCell.isMarked || currCell.isShown) continue
             else {
-                board[i][j].isShown = true
+                currCell.isShown = true
                 gGame.shownCount++
-                // renderShownCell(i, j)
+                if (!currCell.minesAroundCount) {
+                    expandShown(gBoard,i,j)
+                }
             }
         }
     }
-
 }
 
 function changeLevel(level) {
@@ -213,14 +226,18 @@ function livesDecreaseMsg() {
 function storeBestTime() {
     var prevBest = localStorage.getItem('bestResult');
     const timeToSolve = gGame.secsPassed
-    
-    if (!prevBest || timeToSolve < prevBest) {
-        gBestResult = timeToSolve;
-        localStorage.setItem('BestResult', gBestResult);
+    //before first game no pb
+    if (!prevBest && !timeToSolve) {
+        gBestResult = null
+        return
     }
+    //before first game but stored pb 
+    else if (prevBest && !timeToSolve) gBestResult = prevBest
+    //after first game, no stored pb or curr time better then pb
+    else if (!prevBest && timeToSolve) gBestResult = timeToSolve
+    else if (timeToSolve < prevBest) gBestResult = timeToSolve
+    //else time is not better > do nothing
+    else return
+    localStorage.setItem('bestResult', gBestResult)
 }
-function renderBestTime(){
-    const strHTML = `<h2>BEST TIME: ${gBestResult} seconds</h2>`
-    var elBestTime = document.getElementsByClassName('.best')
-    elBestTime.innerHTML = strHTML
-}
+

@@ -23,28 +23,28 @@
 
 
         <div class="game-info">
-            <div class="timer">
-                <h2>LIVE TIME </h2>
+            <button class="difficulty" onclick="changeLevel('beginner')">Beginner</button>
+            <button class="difficulty" onclick="changeLevel('medium')">Medium</button>
+            <button class="difficulty" onclick="changeLevel('expert')">Expert</button>
+            <!-- <div class="timer">
+                <h2></h2>
                 <h2 class="time"></h2>
-            </div>
-            <div class=".best">BEST RESULT</div>
+            </div> -->
             <div class="table-data">
             </div>
-            <button class="re-start" onclick="restartGame()"></button>
+
         </div>
 
 
-        <div class="diff-contaier">
-            <button class="difficulty" onclick="changeLevel('beginner')">Easy</button>
-            <button class="difficulty" onclick="changeLevel('medium')">Medium</button>
-            <button class="difficulty" onclick="changeLevel('expert')">Hard</button>
+        <div class="game-contaier">
+            <button class="re-start" onclick="restartGame()"></button>
+            <h3 hidden></h3><br>
+            <h3 class="lives-msg" hidden></h3>
         </div> <br>
 
 
         <div class="board-container"></div>
 
-        <h3 hidden></h3><br>
-        <h3 class="lives-msg" hidden></h3>
         <br>
         <div class="footer">
                 <p> Game made by Keren Siebner&nbsp;&nbsp;&nbsp;&nbsp;

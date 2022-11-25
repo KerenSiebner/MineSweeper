@@ -81,19 +81,6 @@ function setMinesNegsCount(board) {
     }
 }
 
-function revealNeighbors(cellI, cellJ, board){
-    for (var i = cellI - 1; i <= cellI + 1; i++) {
-        if (i < 0 || i >= board.length) continue
-        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
-            const currCell = board[i][j]
-            if (i === cellI && j === cellJ) continue
-            if (j < 0 || j >= board[i].length) continue
-
-            if (currCell.isMine || currCell.isMarked || currCell.isShown) continue
-            else currCell.isShown = true
-        }
-    }
-}
 
 function setMineOnBoard() {
     const mineCount = gLevel.MINE
@@ -123,38 +110,41 @@ function getRandomIntInclusive(min, max) {
 
 function onMouseButton(event) {
     console.log('MouseEvent.button', MouseEvent.button)
-
+    
     switch (MouseEvent.button) {
         case 0:
             cellClicked(elCell, i, j)
             break
-        case 2:
-            cellMarked(elCell)
-            break
-    }
-}
-
-function startTimer() {
-    gStartTime = Date.now() 
-    gInterval = setInterval(() => {
-        const seconds = (Date.now() - gStartTime) / 1000
-        var elH2 = document.querySelector('.time')
-        elH2.innerText = seconds.toFixed(0)
-        gGame.secsPassed=seconds.toFixed(0)
-    }, 1);
-}
-
-function resetTime() {
-    var elH2 = document.querySelector('.time')
-    elH2.innerText = '0'
-}
-
-function restartGame() {
-    gBoard = []
-    gStartTime = null
-    gGame.shownCount = 0
-    gLives = 3
-    gGame.secsPassed=0
+            case 2:
+                cellMarked(elCell)
+                break
+            }
+        }
+        
+        function startTimer() {
+            gStartTime = Date.now() 
+            gInterval = setInterval(() => {
+                const seconds = (Date.now() - gStartTime) / 1000
+                gGame.secsPassed=seconds.toFixed(0)
+                
+                var elTime = document.querySelector('.table-data span')
+                elTime.innerText = gGame.secsPassed
+                // elTime.innerText = seconds.toFixed(0)
+                
+            }, 1);
+        }
+        
+        function resetTime() {
+            var elTime = document.querySelector('.table-data span')
+            elTime.innerText = '0'
+        }
+        
+        function restartGame() {
+            gBoard = []
+            gStartTime = null
+            gGame.shownCount = 0
+            gLives = 3
+            gGame.secsPassed=0
     gameOverCloseMsg()
     clearInterval(gInterval)
     resetTime()
@@ -170,34 +160,35 @@ function restartButtonChange(isWin) {
 
 function resetSmiley() {
     const elRestartButton = document.querySelector('.re-start')
-    elRestartButton.style.backgroundImage = 'url(img/smiley.png)'
+    elRestartButton.style.backgroundImage = 'url(img/smily.jpeg)'
 }
 
 function renderGameInfo() {
+    
     var level = ''
     switch (gLevel.SIZE) {
         case 4: level = 'BEGINNER'
-            break
+        break
         case 8: level = 'MEDIUM'
-            break
+        break
         case 12: level = 'EXPERT'
-            break
+        break
     }
     var hearts = ''
     switch (gLives) {
         case 3: hearts = LIVE + LIVE + LIVE
-            break
+        break
         case 2: hearts = LIVE + LIVE
-            break
+        break
         case 1: hearts = LIVE
-            break
+        break
     }
-
+    
     var strHTML = '<table class=".data" border="1"><tbody>'
-    strHTML += `<tr><th>&nbspCOUNT&nbsp</th> <th>&nbspLEVEL&nbsp</th><th>&nbspLIVES&nbsp</th></tr>`
-    strHTML += `<tr><td>${gGame.shownCount}</td><td>${level}</td><td>${hearts}</td></tr>`
+    strHTML += `<tr><th>&nbspTIME&nbsp</th><th>&nbspBEST TIME&nbsp</th><th>&nbspCOUNT&nbsp</th> <th>&nbsp&nbspLEVEL&nbsp&nbsp</th><th>&nbspLIVES&nbsp</th></tr>`
+    strHTML += `<tr><td><span .time>0</span</td><td>${gBestResult}</td><td>${gGame.shownCount}</td><td>&nbsp${level}&nbsp</td><td>${hearts}</td></tr>`
     strHTML += '</tbody></table>'
-
+    
     const elContainer = document.querySelector(".table-data")
     elContainer.innerHTML = strHTML
 }
