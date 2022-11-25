@@ -21,7 +21,7 @@ function buildBoard(size, minesCount) {
 // Render the board as a <table> to the page
 
 function renderBoard(board, selector) {
-    
+
     var strHTML = '<table border="0"><tbody>'
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>'
@@ -29,23 +29,22 @@ function renderBoard(board, selector) {
 
             const cell = board[i][j]
             var className = `cell cell-${i}-${j}`
-            
+
             if (cell.isMine && cell.isShown) className += ' mine'
             if (cell.isShown) className += ' shown'
             if (cell.isMarked) className += ' flag'
 
             strHTML += `<td class="${className}" onclick ="cellClicked(this, ${i},${j})" oncontextmenu ="cellMarked(this, ${i},${j})">`
-            
-            if (!cell.isMine && cell.isShown && (cell.minesAroundCount!==0)) strHTML += `${cell.minesAroundCount}`
+
+            if (!cell.isMine && cell.isShown && (cell.minesAroundCount !== 0)) strHTML += `${cell.minesAroundCount}`
         }
         strHTML += '</td></tr>'
     }
     strHTML += '</tbody></table>'
-    
+
     const elContainer = document.querySelector(selector)
-    console.log('elContainer', elContainer)
     elContainer.innerHTML = strHTML
-    
+
 }
 
 function renderShownCell(row, column) {
@@ -87,19 +86,18 @@ function setMineOnBoard() {
     for (var i = 0; i < mineCount; i++) {
         var mineIdx = randonMineIdx()
         var currCell = gBoard[mineIdx.i][mineIdx.j]
-        console.log('gBoard', gBoard)
-        while(currCell.isMine || currCell.isShown){
+        while (currCell.isMine || currCell.isShown) {
             mineIdx = randonMineIdx()
             currCell = gBoard[mineIdx.i][mineIdx.j]
         }
-        gBoard[mineIdx.i][mineIdx.j].isMine=true
+        gBoard[mineIdx.i][mineIdx.j].isMine = true
     }
 }
 
 function randonMineIdx() {
     var randIdx = {}
-    var row = getRandomIntInclusive(0, gLevel.SIZE-1)
-    var column = getRandomIntInclusive(0, gLevel.SIZE-1)
+    var row = getRandomIntInclusive(0, gLevel.SIZE - 1)
+    var column = getRandomIntInclusive(0, gLevel.SIZE - 1)
     randIdx = { i: row, j: column }
     return randIdx
 }
@@ -110,41 +108,41 @@ function getRandomIntInclusive(min, max) {
 
 function onMouseButton(event) {
     console.log('MouseEvent.button', MouseEvent.button)
-    
+
     switch (MouseEvent.button) {
         case 0:
             cellClicked(elCell, i, j)
             break
-            case 2:
-                cellMarked(elCell)
-                break
-            }
-        }
-        
-        function startTimer() {
-            gStartTime = Date.now() 
-            gInterval = setInterval(() => {
-                const seconds = (Date.now() - gStartTime) / 1000
-                gGame.secsPassed=seconds.toFixed(0)
-                
-                var elTime = document.querySelector('.table-data span')
-                elTime.innerText = gGame.secsPassed
-                // elTime.innerText = seconds.toFixed(0)
-                
-            }, 1);
-        }
-        
-        function resetTime() {
-            var elTime = document.querySelector('.table-data span')
-            elTime.innerText = '0'
-        }
-        
-        function restartGame() {
-            gBoard = []
-            gStartTime = null
-            gGame.shownCount = 0
-            gLives = 3
-            gGame.secsPassed=0
+        case 2:
+            cellMarked(elCell)
+            break
+    }
+}
+
+function startTimer() {
+    gStartTime = Date.now()
+    gInterval = setInterval(() => {
+        const seconds = (Date.now() - gStartTime) / 1000
+        gGame.secsPassed = seconds.toFixed(0)
+        var elTime = document.querySelector('.table-data span')
+        elTime.innerText = gGame.secsPassed
+        // elTime.innerText = seconds.toFixed(0)
+
+    }, 1);
+}
+
+function resetTime() {
+    var elTime = document.querySelector('.table-data span')
+    elTime.innerText = '0'
+}
+
+function restartGame() {
+    console.log('hi')
+    gBoard = []
+    gStartTime = null
+    gGame.shownCount = 0
+    gLives = 3
+    gGame.secsPassed = 0
     gameOverCloseMsg()
     clearInterval(gInterval)
     resetTime()
@@ -177,20 +175,26 @@ function renderGameInfo() {
     var hearts = ''
     switch (gLives) {
         case 3: hearts = LIVE + LIVE + LIVE
-        break
+            break
         case 2: hearts = LIVE + LIVE
         break
         case 1: hearts = LIVE
         break
     }
+
+    var bestTime = gBestResult? gBestResult:'NO PB'
     
     var strHTML = '<table class=".data" border="1"><tbody>'
     strHTML += `<tr><th>&nbspTIME&nbsp</th><th>&nbspBEST TIME&nbsp</th><th>&nbspCOUNT&nbsp</th> <th>&nbsp&nbspLEVEL&nbsp&nbsp</th><th>&nbspLIVES&nbsp</th></tr>`
-    strHTML += `<tr><td><span .time>0</span</td><td>${gBestResult}</td><td>${gGame.shownCount}</td><td>&nbsp${level}&nbsp</td><td>${hearts}</td></tr>`
+    strHTML += `<tr><td><span .time>0</span</td><td>${bestTime}</td><td>${gGame.shownCount}</td><td>&nbsp&nbsp${level}&nbsp&nbsp</td><td>${hearts}</td></tr>`
     strHTML += '</tbody></table>'
+    
     
     const elContainer = document.querySelector(".table-data")
     elContainer.innerHTML = strHTML
+
+    var elTime = document.querySelector('.table-data span')
+    elTime.innerText = gGame.secsPassed
 }
 
 function isBoardMarked() {
@@ -203,11 +207,11 @@ function isBoardMarked() {
     return false
 }
 
-function revealMines(){
+function revealMines() {
     const size = gBoard.length
     for (var i = 0; i < size; i++) {
         for (var j = 0; j < size; j++) {
-            const currCell =gBoard[i][j]
+            const currCell = gBoard[i][j]
             if (currCell.isMine) currCell.isShown = true
         }
     }

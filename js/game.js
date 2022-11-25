@@ -95,7 +95,7 @@ function cellClicked(elCell, i, j) {
         console.log('currTime', currTime)
         gGame.secsPassed = currTime
         console.log('gGame.secsPassed', gGame.secsPassed)
-        // renderGameInfo()
+        renderGameInfo()
         clearInterval(gInterval)
     }
 
@@ -147,7 +147,6 @@ function checkGameOver() {
         for (var i = 0; i < gLevel.SIZE; i++) {
             for (var j = 0; j < gLevel.SIZE; j++) {
                 var currCell = gBoard[i][j]
-                console.log('currCell', currCell)
                 if (currCell.isMine && !currCell.isMarked && !currCell.isShown && gLives) return false
             }
         }
@@ -224,8 +223,10 @@ function livesDecreaseMsg() {
 
 //check if there is a best time in the local storage
 function storeBestTime() {
-    var prevBest = localStorage.getItem('bestResult');
-    const timeToSolve = gGame.secsPassed
+    var prevBest = +localStorage.getItem('bestResult');
+    console.log('prevBest', prevBest)
+    const timeToSolve = +gGame.secsPassed
+    console.log('timeToSolve', timeToSolve)
     //before first game no pb
     if (!prevBest && !timeToSolve) {
         gBestResult = null
