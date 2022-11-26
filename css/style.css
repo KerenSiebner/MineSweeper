@@ -4,7 +4,7 @@
 body {
     background-color: rgba(172, 188, 226, 0.091);
     color: black;
-    font-family: Audiowide;
+    font-family: Righteous;
     margin: 20px;
     border: 20px;
 }
@@ -45,6 +45,7 @@ body {
     float: left;
     left: 70px;
     margin: auto;
+    margin-bottom: 50px;;
     width: 750px;
 }
 
@@ -77,9 +78,6 @@ body {
 }
 
 
-p {
-    font-size: 12px;
-}
 
 h1 {
     display: inline;
@@ -133,7 +131,7 @@ h3 {
 }
 
 .re-start {
-    background-image: url(img/smily.jpeg);
+    background-image: url(img/smily.png);
     width: 60px;
     height: 60px;
     background-size: 60%;
@@ -164,8 +162,16 @@ h3 {
     text-align: center;
     letter-spacing: 3px;
     text-transform: uppercase;
-    padding: 10px;
+    padding: 0px;
+    display: inline;
     position: fixed bottom;
+    text-align: center;
+    border-top: 1px solid black
+}
+.footer{
+    text-align: center;
+    width: 800px;
+margin-top: 100px;
 }
 
 

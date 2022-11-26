@@ -158,7 +158,7 @@ function restartButtonChange(isWin) {
 
 function resetSmiley() {
     const elRestartButton = document.querySelector('.re-start')
-    elRestartButton.style.backgroundImage = 'url(img/smily.jpeg)'
+    elRestartButton.style.backgroundImage = 'url(img/smily.png)'
 }
 
 function renderGameInfo() {

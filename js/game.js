@@ -218,7 +218,7 @@ function livesDecreaseMsg() {
     if (gLives === 1) plural = ' life'
     livesMsg.innerText = `You have ${gLives} ${plural} left! `
     livesMsg.hidden = false
-    setTimeout(() => { livesMsg.hidden = true }, 1000)
+    setTimeout(() => { livesMsg.hidden = true }, 1500)
 }
 
 //check if there is a best time in the local storage
