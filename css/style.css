@@ -1,0 +1,219 @@
+/* html {
+    padding: 50px 500px;
+} */
+body {
+    background-color: rgba(172, 188, 226, 0.091);
+    color: black;
+    font-family: Righteous;
+    /* margin: 20px; */
+    margin: 0 auto;
+    border: 20px;
+}
+
+.container {
+    width: 800px;
+    margin: 0 auto;
+    padding-left: 3px;
+    padding-right: 3px;
+    margin-top: 30px;
+    border: 2px solid rgba(128, 128, 128, 0.409);
+    border-radius: 10px;
+}
+
+.heading-section {
+    left: 0px;
+    padding-top: 10px;
+    padding-bottom: 0px;
+    overflow: hidden;
+    text-align: center;
+    background: linear-gradient(#f3f6f7, #4045de98);
+    border-bottom: solid rgb(237, 233, 233);
+}
+
+.game-contaier {
+    float: bottom;
+    padding-top: 10px;
+    padding-bottom: 0px;
+    overflow: hidden;
+}
+
+.board-container {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 50px;
+    ;
+}
+
+.cell {
+    width: 10px;
+    height: 30px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid black;
+    background-color: rgb(155, 165, 68);
+
+    background-color: #0d14e476;
+    border-radius: 10px;
+    box-shadow: rgba(80, 92, 127, .2) 0 -25px 18px -14px inset, rgba(80, 92, 127, .15) 0 1px 2px, rgba(80, 92, 127, .15) 0 2px 4px, rgba(80, 92, 127, .15) 0 4px 8px, rgba(80, 92, 127, .15) 0 8px 16px, rgba(80, 92, 127, .15) 0 16px 32px;
+    color: rgba(80, 92, 127, 0.859);
+    cursor: pointer;
+    display: inline-block;
+    padding: 7px 20px;
+    text-align: center;
+    line-height: 40px;
+    text-decoration: none;
+    transition: all 250ms;
+    border: 0;
+    margin: 5px;
+    font-size: 16px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+
+}
+
+
+
+h1 {
+    display: inline;
+    text-align: center;
+    font-size: 40px;
+}
+
+h2 {
+    width: 100px;
+    float: left;
+    display: block;
+    font-size: 20px;
+}
+
+
+h3 {
+    /* display: block; */
+    float: left;
+    left: 0;
+    color: black;
+    font-size: 20px;
+    margin-left: 20px;
+    margin-top: 8px;
+}
+
+.mine {
+    background-image: url(img/mine.png);
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.difficulty {
+    font-size: 14px;
+    font-family: inherit;
+    padding: 2px 10px;
+    margin: 5px;
+    float: left;
+    margin-top: 18px;
+    margin-left: 5px;
+    background-color: rgba(255, 255, 255, 0.254);
+    border-radius: 10px;
+}
+
+
+.flag {
+    background-image: url(img/flag.png);
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.re-start {
+    background-image: url(img/smily.png);
+    width: 60px;
+    height: 60px;
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+    float: left;
+    margin-left: 45%;
+    margin-bottom: 1px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 0, 0, 0.299);
+}
+
+.shown {
+    background-color: #0d14e421;
+    box-shadow: none;
+    border-radius: 0px;
+}
+
+.mine {
+    background-color: rgba(255, 255, 255, 0.44);
+}
+
+
+.footer p {
+    font-size: 16px;
+    width: 800px;
+    bottom: 0px;
+    text-align: center;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 0px;
+    display: inline;
+    position: fixed bottom;
+    text-align: center;
+}
+
+.footer {
+    text-align: center;
+    border-top: 1px solid grey;
+    margin: 15px 20px;
+    padding-top: 10px;
+}
+
+
+
+.data td {
+    border: 1px solid black;
+    padding: 100px;
+}
+
+.game-info {
+    background: #0d14e418;
+    padding-left: 50px;
+    overflow: hidden;
+    border-bottom: solid rgba(14, 11, 11, 0.241);
+    border-bottom-width: 2px;
+    text-align: center;
+}
+
+.table-data {
+    float: left;
+    text-align: center;
+    margin-left: 50px;
+    padding-bottom: 10px;
+    ;
+}
+
+.table-data th td {
+    padding: 10px;
+    width: 500px;
+}
+
+table {
+    position: block;
+    margin-left: 0;
+    margin-top: 10px;
+    font-size: 14px;
+    border-spacing: 0;
+    border-color: rgba(128, 128, 128, 0.307);
+}
+
+/* 
+.timer h2 {
+    width: 120px;
+    margin-left: 30px;
+    left: auto;
+    font-size: 20px;
+} */
