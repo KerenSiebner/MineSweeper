@@ -11,13 +11,11 @@ body {
 }
 
 .container {
-    width: 800px;
+    width: 100vw;
     margin: 0 auto;
-    padding-left: 3px;
-    padding-right: 3px;
-    margin-top: 30px;
-    border: 2px solid rgba(128, 128, 128, 0.409);
     border-radius: 10px;
+    height: fit-content;
+    max-height: 90vh;
 }
 
 .heading-section {
@@ -31,10 +29,10 @@ body {
 }
 
 .game-contaier {
-    float: bottom;
     padding-top: 10px;
     padding-bottom: 0px;
     overflow: hidden;
+    height: 60px;
 }
 
 .board-container {
@@ -110,13 +108,12 @@ h3 {
 .difficulty {
     font-size: 14px;
     font-family: inherit;
-    padding: 2px 10px;
-    margin: 5px;
+    padding: 4px 13px;
     float: left;
-    margin-top: 18px;
-    margin-left: 5px;
+    margin-left: 10px;
     background-color: rgba(255, 255, 255, 0.254);
     border-radius: 10px;
+    border: 1.5px solid grey;
 }
 
 
@@ -134,9 +131,8 @@ h3 {
     background-size: 60%;
     background-position: center;
     background-repeat: no-repeat;
-    float: left;
-    margin-left: 45%;
-    margin-bottom: 1px;
+    display: block;
+    margin: 0 auto;
     border-radius: 50%;
     border: 2px solid rgba(0, 0, 0, 0.299);
 }
@@ -180,12 +176,14 @@ h3 {
 }
 
 .game-info {
+    display: flex;
     background: #0d14e418;
-    padding-left: 50px;
     overflow: hidden;
     border-bottom: solid rgba(14, 11, 11, 0.241);
     border-bottom-width: 2px;
     text-align: center;
+    justify-content: center;
+    align-items: center;
 }
 
 .table-data {
@@ -193,27 +191,44 @@ h3 {
     text-align: center;
     margin-left: 50px;
     padding-bottom: 10px;
-    ;
 }
 
-.table-data th td {
-    padding: 10px;
-    width: 500px;
+tbody {
+    border-color: transparent;
+}
+
+td,
+th {
+    padding: 5px 10px;
+
 }
 
 table {
-    position: block;
     margin-left: 0;
     margin-top: 10px;
     font-size: 14px;
     border-spacing: 0;
     border-color: rgba(128, 128, 128, 0.307);
+    border-radius: 15px;
 }
 
-/* 
-.timer h2 {
-    width: 120px;
-    margin-left: 30px;
-    left: auto;
-    font-size: 20px;
-} */
+.difficulty-btns{
+    margin-bottom: 10px;
+}
+
+@media (max-width: 600px) {
+    .game-info {
+        flex-direction: column-reverse;
+    }
+
+    .table-data {
+        margin-left: 0;
+    }
+
+    td,
+    th {
+        padding: 2px 5px;
+
+    }
+
+}

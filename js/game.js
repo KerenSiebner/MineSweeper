@@ -6,7 +6,7 @@ window.oncontextmenu = (e) => {
 }
 
 const MINE = '\u{1F525}'
-const LIVE = '\u{1F499}'
+const LIVE = '💛'
 // gBoard – A Matrix containing cell objects: Each cell: 
 var gBoard = []
 var gInterval
